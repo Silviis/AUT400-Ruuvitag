@@ -22,5 +22,5 @@ Next start the ocpua mock server by running the opcua-server.py in another termi
 ```python3 opcua-server.py```
 
 Then you can start the TCP socket client by running following command in another terminal:
-```python3  ruuvitag_mock_tcp_server.py```.
+```python3  ruuvitag_mock_tcp_client.py```.
 In that terminal window you can start manually inputing mock values that normally would be gotten from the RuuviTag-sensor. If everything works correctly those same values should also be displayed in the terminal you launched the OPC UA (as they get sent through the node-red environment).
