@@ -1,0 +1,488 @@
+[
+    {
+        "id": "7b3e130704516660",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "498162161b3ba132",
+        "type": "ui_gauge",
+        "z": "7b3e130704516660",
+        "name": "",
+        "group": "000a8817137e8016",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "gtype": "gage",
+        "title": "Lämpötila RuuviTagilta",
+        "label": "°C",
+        "format": "{{msg.payload.temp}}",
+        "min": "-50",
+        "max": "50",
+        "colors": [
+            "#73d214",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 680,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "56a1a44768986d49",
+        "type": "catch",
+        "z": "7b3e130704516660",
+        "name": "",
+        "scope": null,
+        "uncaught": false,
+        "x": 220,
+        "y": 640,
+        "wires": [
+            [
+                "1a94a394467f6ab0"
+            ]
+        ]
+    },
+    {
+        "id": "1a94a394467f6ab0",
+        "type": "function",
+        "z": "7b3e130704516660",
+        "name": "Handle error display",
+        "func": "msg.topic = \"Error\";\nmsg.payload = msg.error.message;\nvar flowdata = flow.get(\"debug_data\");\nflowdata.push(msg)\nflow.set(\"debug_data\", flowdata);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 640,
+        "wires": [
+            [
+                "f4ebb309c36ba005"
+            ]
+        ]
+    },
+    {
+        "id": "f4ebb309c36ba005",
+        "type": "ui_toast",
+        "z": "7b3e130704516660",
+        "position": "top right",
+        "displayTime": "10",
+        "highlight": "",
+        "sendall": false,
+        "outputs": 0,
+        "ok": "OK",
+        "cancel": "",
+        "raw": false,
+        "className": "",
+        "topic": "",
+        "name": "",
+        "x": 730,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "dfcafb5cdd04b78e",
+        "type": "ui_switch",
+        "z": "7b3e130704516660",
+        "name": "",
+        "label": "Kytke lämpötilan lähetys päälle/pois",
+        "tooltip": "",
+        "group": "000a8817137e8016",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "send_temp",
+        "topicType": "str",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 1000,
+        "y": 360,
+        "wires": [
+            [
+                "cc95266abd7686b9"
+            ]
+        ]
+    },
+    {
+        "id": "39696231369814d5",
+        "type": "ui_switch",
+        "z": "7b3e130704516660",
+        "name": "",
+        "label": "Kytke historiatietojen käyttö päälle/pois",
+        "tooltip": "",
+        "group": "000a8817137e8016",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "history",
+        "topicType": "str",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 1010,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d7d1ddee0b51b735",
+        "type": "ui_gauge",
+        "z": "7b3e130704516660",
+        "name": "",
+        "group": "83affc818f91f56c",
+        "order": 1,
+        "width": "0",
+        "height": "0",
+        "gtype": "donut",
+        "title": "RuuviTag:in akun varaustaso",
+        "label": "%",
+        "format": "{{msg.payload.battery}}",
+        "min": "0",
+        "max": "100",
+        "colors": [
+            "#ff0000",
+            "#ffff00",
+            "#00ff00"
+        ],
+        "seg1": "0",
+        "seg2": "0",
+        "diff": false,
+        "className": "",
+        "x": 680,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "e1d25f1c2d2cb142",
+        "type": "function",
+        "z": "7b3e130704516660",
+        "name": "RuuviTag",
+        "func": "var time = new Date(msg.timestamp);\nvar data = msg.payload.split(',')\nvar btr = data[1]\nvar temp = data[0]\n\nmsg.topic = \"Data from RuuviTag\";\nmsg.payload = { \"time\" : time,\n                \"battery\" : btr,\n                \"temp\" : temp\n              };\nflow.set(\"ruuvi_data\", temp)\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\nflow.set(\"debug_data\", [])\nflow.set(\"ruuvi_data\", [])",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 420,
+        "wires": [
+            [
+                "498162161b3ba132",
+                "d7d1ddee0b51b735",
+                "99a33208b2530b1b",
+                "39696231369814d5",
+                "dfcafb5cdd04b78e",
+                "68e82901daf6c31b"
+            ]
+        ]
+    },
+    {
+        "id": "071d6256e3cd3876",
+        "type": "debug",
+        "z": "7b3e130704516660",
+        "name": "Debug data sent to opcua",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1630,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "1c99107b05727a58",
+        "type": "function",
+        "z": "7b3e130704516660",
+        "name": "Format debug log",
+        "func": "msg.topic = \"Debug log message\"\nif (msg.payload == false){\n    msg.payload = \"\";\n    return msg\n}\n\nvar debug_data = flow.get(\"debug_data\");\nvar message = \"\";\ndebug_data.forEach(function (item, index) {\n    console.log(item);\n    message = message + ` Message topic: ${item.topic}\\n   Timestamp (Unix time of debug log entry): ${item.timestamp}\\n`;\n    if (item.topic == \"Error\"){\n        message = message + `   Payload:\\n      Message: ${item.error.message}\\n      Source node ID: ${item.error.source.id}\\n      Source node name: ${item.error.source.name}\\n\\n`\n    }\n    else if(item.topic == \"Data from RuuviTag\"){\n        message = message + `   Payload:\\n      Battery %: ${item.payload.battery}\\n      Temperature °C: ${item.payload.temp}\\n      Time of reading: ${item.payload.time}\\n\\n`\n    }\n});\n\nmsg.payload = message;\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1230,
+        "y": 440,
+        "wires": [
+            [
+                "0786fa784abfad21",
+                "f5f4bf97cded0fec"
+            ]
+        ]
+    },
+    {
+        "id": "99a33208b2530b1b",
+        "type": "function",
+        "z": "7b3e130704516660",
+        "name": "Save to debug log",
+        "func": "var flowdata = flow.get(\"debug_data\");\nflowdata.push(msg)\nflow.set(\"debug_data\", flowdata);",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0786fa784abfad21",
+        "type": "ui_template",
+        "z": "7b3e130704516660",
+        "group": "450b9098b58fb386",
+        "name": "",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "format": "<style>\n    #mylog {\n        min-height: 300px;\n        padding: 0;\n        background-color: white;\n        white-space: pre;\n    }\n</style>\n\n<div id=\"mylog\" ng-bind=\"msg.payload\" contenteditable=\"true\">\n    <!-- payload will go here -->\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 1440,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "68e82901daf6c31b",
+        "type": "ui_switch",
+        "z": "7b3e130704516660",
+        "name": "",
+        "label": "Kytke debug loki päälle/pois",
+        "tooltip": "",
+        "group": "000a8817137e8016",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "decouple": "false",
+        "topic": "topic",
+        "topicType": "msg",
+        "style": "",
+        "onvalue": "true",
+        "onvalueType": "bool",
+        "onicon": "",
+        "oncolor": "",
+        "offvalue": "false",
+        "offvalueType": "bool",
+        "officon": "",
+        "offcolor": "",
+        "animate": false,
+        "className": "",
+        "x": 980,
+        "y": 440,
+        "wires": [
+            [
+                "1c99107b05727a58"
+            ]
+        ]
+    },
+    {
+        "id": "cc95266abd7686b9",
+        "type": "function",
+        "z": "7b3e130704516660",
+        "name": "Format data to send to opcua",
+        "func": "if (msg.topic == \"temp_send\" && msg.payload == false){\n    return;\n}\n\nmsg.topic = \"Data to OPCUA\"\n/*\nif (msg.topic == \"history\" && msg.payload == true)\n{\n\n    // form history data here and save it to msg.payload\n    msg.payload = 0;\n    return msg;\n}\n*/\n\nmsg.payload = flow.get(\"ruuvi_data\");\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1340,
+        "y": 340,
+        "wires": [
+            [
+                "071d6256e3cd3876",
+                "50768688a3cbcef1"
+            ]
+        ]
+    },
+    {
+        "id": "50768688a3cbcef1",
+        "type": "OpcUa-Item",
+        "z": "7b3e130704516660",
+        "item": "ns=2;i=2",
+        "datatype": "Int16",
+        "value": "msg.payload",
+        "name": "Data from RuuviTag",
+        "x": 1660,
+        "y": 360,
+        "wires": [
+            [
+                "58126af2b400fd1e"
+            ]
+        ]
+    },
+    {
+        "id": "58126af2b400fd1e",
+        "type": "OpcUa-Client",
+        "z": "7b3e130704516660",
+        "endpoint": "9f4c613d51d475bf",
+        "action": "write",
+        "deadbandtype": "a",
+        "deadbandvalue": 1,
+        "time": 10,
+        "timeUnit": "s",
+        "certificate": "n",
+        "localfile": "",
+        "localkeyfile": "",
+        "securitymode": "None",
+        "securitypolicy": "None",
+        "folderName4PKI": "",
+        "name": "",
+        "x": 1940,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e62a6fd59f02b1a9",
+        "type": "tcp in",
+        "z": "7b3e130704516660",
+        "name": "",
+        "server": "server",
+        "host": "localhost",
+        "port": "1234",
+        "datamode": "stream",
+        "datatype": "utf8",
+        "newline": "",
+        "topic": "",
+        "trim": false,
+        "base64": false,
+        "tls": "",
+        "x": 130,
+        "y": 420,
+        "wires": [
+            [
+                "e1d25f1c2d2cb142",
+                "eb49c907061297d1"
+            ]
+        ]
+    },
+    {
+        "id": "eb49c907061297d1",
+        "type": "debug",
+        "z": "7b3e130704516660",
+        "name": "Debug TCP socket",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 370,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "f5f4bf97cded0fec",
+        "type": "debug",
+        "z": "7b3e130704516660",
+        "name": "Debug data sent to debug log",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1510,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "000a8817137e8016",
+        "type": "ui_group",
+        "name": "Hallintapaneeli",
+        "tab": "a81787d12c218de4",
+        "order": 1,
+        "disp": false,
+        "width": "14",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "83affc818f91f56c",
+        "type": "ui_group",
+        "name": "Akun varaustaso",
+        "tab": "a81787d12c218de4",
+        "order": 2,
+        "disp": false,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "450b9098b58fb386",
+        "type": "ui_group",
+        "name": "Debug loki",
+        "tab": "a81787d12c218de4",
+        "order": 3,
+        "disp": true,
+        "width": "13",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9f4c613d51d475bf",
+        "type": "OpcUa-Endpoint",
+        "endpoint": "opc.tcp://127.0.0.1:4841",
+        "secpol": "None",
+        "secmode": "None",
+        "none": true,
+        "login": false,
+        "usercert": false,
+        "usercertificate": "",
+        "userprivatekey": ""
+    },
+    {
+        "id": "a81787d12c218de4",
+        "type": "ui_tab",
+        "name": "Lämpötilan seurantajärjestelmä",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
